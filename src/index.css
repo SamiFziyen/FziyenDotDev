@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500;
+}
+
+.hero-background {
+  position: relative;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+  animation: gradientShift 15s ease infinite;
+  background-size: 400% 400%;
+  overflow: hidden;
+}
+
+.hero-background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5,25 Q12.5,12.5 25,25 T45,25' stroke='rgba(139, 92, 246, 0.3)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,30 Q12.5,17.5 25,30 T50,30' stroke='rgba(59, 130, 246, 0.3)' fill='none' stroke-width='1'/%3E%3Cpath d='M0,20 Q12.5,7.5 25,20 T50,20' stroke='rgba(139, 92, 246, 0.2)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 50px 50px;
+  opacity: 1;
+  animation: moveLines 15s linear infinite;
+}
+
+@keyframes moveLines {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.portrait-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.portrait-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.portrait-border {
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation: morphing 15s ease-in-out infinite;
+}
+
+.portrait-content {
+  position: absolute;
+  inset: 6px;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  overflow: hidden;
+  animation: morphing 15s ease-in-out infinite;
+}
+
+.portrait-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+}
+
+@keyframes morphing {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  25% {
+    border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+  }
+  50% {
+    border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+  }
+  75% {
+    border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+  }
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+}
+
+.timeline-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow;
+}
+
+.timeline-education {
+  @apply border-l-4 border-blue-500;
+}
+
+.timeline-work {
+  @apply border-l-4 border-purple-500;
+}
