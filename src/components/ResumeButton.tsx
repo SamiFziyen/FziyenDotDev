@@ -1,6 +1,6 @@
-import React from 'react';
-import { FileDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { FileDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const ResumeButton: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ export const ResumeButton: React.FC = () => {
       className="fixed right-0 top-1/2 -translate-y-1/2 hidden md:block z-40"
     >
       <motion.a
-        href="https://drive.google.com/file/d/1QLJaIW4KZEoUoOGEgntzu2anRrdJ1myV/view?usp=drive_link"
+        href="../../public/Sami_Public_CV.pdf"
         download="Sami_Public_CV.pdf"
         whileHover={{ x: -8 }}
         className="flex items-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-l-lg shadow-lg hover:bg-purple-700 transition-colors"

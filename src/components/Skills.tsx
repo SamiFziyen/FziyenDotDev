@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import {
   Code2,
   Database,
@@ -9,50 +9,49 @@ import {
   Workflow,
   Terminal,
   PenTool,
-  Cpu,
   Monitor,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
 const skillCategories = [
   {
-    title: 'Frontend Development',
+    title: "Frontend Development",
     icon: <Monitor className="w-6 h-6 text-blue-500" />,
     skills: [
-      { name: 'React', icon: <Code2 className="w-5 h-5" /> },
-      { name: 'TypeScript', icon: <Code2 className="w-5 h-5" /> },
-      { name: 'JavaScript (ES6+)', icon: <Code2 className="w-5 h-5" /> },
-      { name: 'HTML/CSS', icon: <PenTool className="w-5 h-5" /> },
+      { name: "ReactJS", icon: <Code2 className="w-5 h-5" /> },
+      { name: "TypeScript", icon: <Code2 className="w-5 h-5" /> },
+      { name: "Next.JS", icon: <Code2 className="w-5 h-5" /> },
+      { name: "HTML/CSS", icon: <PenTool className="w-5 h-5" /> },
     ],
   },
   {
-    title: 'Backend Development',
+    title: "Backend Development",
     icon: <Server className="w-6 h-6 text-green-500" />,
     skills: [
-      { name: 'Node.js', icon: <Terminal className="w-5 h-5" /> },
-      { name: 'C#', icon: <Terminal className="w-5 h-5" /> },
-      { name: 'Python', icon: <Terminal className="w-5 h-5" /> },
-      { name: 'Express.js', icon: <Server className="w-5 h-5" /> },
+      { name: "Node.js", icon: <Terminal className="w-5 h-5" /> },
+      { name: "C#", icon: <Terminal className="w-5 h-5" /> },
+      { name: "Python", icon: <Terminal className="w-5 h-5" /> },
+      { name: "Express.js", icon: <Server className="w-5 h-5" /> },
     ],
   },
   {
-    title: 'Databases',
+    title: "Databases",
     icon: <Database className="w-6 h-6 text-purple-500" />,
     skills: [
-      { name: 'MySQL', icon: <Database className="w-5 h-5" /> },
-      { name: 'MongoDB', icon: <Database className="w-5 h-5" /> },
-      { name: 'OracleDB', icon: <Database className="w-5 h-5" /> },
-      { name: 'Supabase', icon: <Zap className="w-5 h-5" /> },
+      { name: "MySQL", icon: <Database className="w-5 h-5" /> },
+      { name: "MongoDB", icon: <Database className="w-5 h-5" /> },
+      { name: "OracleDB", icon: <Database className="w-5 h-5" /> },
+      { name: "Supabase", icon: <Zap className="w-5 h-5" /> },
     ],
   },
   {
-    title: 'DevOps & Tools',
+    title: "DevOps & Tools",
     icon: <Cloud className="w-6 h-6 text-orange-500" />,
     skills: [
-      { name: 'Docker & Kubernetes', icon: <Layers className="w-5 h-5" /> },
-      { name: 'Git', icon: <Workflow className="w-5 h-5" /> },
-      { name: 'AWS', icon: <Cloud className="w-5 h-5" /> },
-      { name: 'Linux', icon: <Cpu className="w-5 h-5" /> },
+      { name: "Docker & Kubernetes", icon: <Layers className="w-5 h-5" /> },
+      { name: "Git", icon: <Workflow className="w-5 h-5" /> },
+      { name: "AWS", icon: <Cloud className="w-5 h-5" /> },
+      { name: "Azure", icon: <Cloud className="w-5 h-5" /> },
     ],
   },
 ];

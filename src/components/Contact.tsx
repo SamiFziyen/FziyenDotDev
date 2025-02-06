@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send } from 'lucide-react';
-import emailjs from '@emailjs/browser';
-import toast from 'react-hot-toast';
+import React, { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Send } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import toast from "react-hot-toast";
 
 export const Contact: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -15,15 +15,15 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
     try {
       await emailjs.sendForm(
-        'service_om7liba',
-        'template_w74g23n',
+        "service_om7liba",
+        "template_w74g23n",
         formRef.current,
-        'ldQcHYObtAdmZqv9g'
+        "ldQcHYObtAdmZqv9g"
       );
-      toast.success('Message sent successfully!');
+      toast.success("Message sent successfully!");
       formRef.current.reset();
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,7 +81,7 @@ export const Contact: React.FC = () => {
             className="w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center justify-center gap-2 transition-colors disabled:opacity-70"
           >
             {isSubmitting ? (
-              'Sending...'
+              "Sending..."
             ) : (
               <>
                 Send Message
