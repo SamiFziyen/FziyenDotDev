@@ -94,4 +94,12 @@ export const certifications: Certification[] = [
     credentialUrl:
       "https://www.freecodecamp.org/certification/Sami-Fziyen/javascript-algorithms-and-data-structures",
   },
+  {
+    name: "Responsive Web Design",
+    issuer: "FreeCodeCamp",
+    issueDate: "Janurary 2022",
+    logo: "https://www.npmjs.com/npm-avatar/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdmF0YXJVUkwiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci9mY2RhNDM4NTI2MDg2MjZmZTQ2ZDdmZDQzMTQ1NzY2ZT9zaXplPTQ5NiZkZWZhdWx0PXJldHJvIn0.l-5iyLZMhxA8NPM6apqba6oCeJ4p8f63d6aVep6utAI",
+    credentialUrl:
+      "https://www.freecodecamp.org/certification/Sami-Fziyen/responsive-web-design",
+  },
 ];
