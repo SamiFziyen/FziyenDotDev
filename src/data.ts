@@ -71,6 +71,14 @@ export const timeline: TimelineItem[] = [
 
 export const certifications: Certification[] = [
   {
+    name: "AWS Cloud Developing",
+    issuer: "Amazon Web Services",
+    issueDate: "February 2025",
+    logo: "https://images.credly.com/size/680x680/images/119182cf-ca68-495a-a415-bff62dfdcc7e/image.png",
+    credentialUrl:
+      "https://www.credly.com/badges/2d42d87d-6b51-487d-ac1f-84a8aa8e95fd/public_url",
+  },
+  {
     name: "AWS Cloud Foundations",
     issuer: "Amazon Web Services",
     issueDate: "October 2024",
@@ -85,13 +93,5 @@ export const certifications: Certification[] = [
     logo: "https://www.npmjs.com/npm-avatar/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdmF0YXJVUkwiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci9mY2RhNDM4NTI2MDg2MjZmZTQ2ZDdmZDQzMTQ1NzY2ZT9zaXplPTQ5NiZkZWZhdWx0PXJldHJvIn0.l-5iyLZMhxA8NPM6apqba6oCeJ4p8f63d6aVep6utAI",
     credentialUrl:
       "https://www.freecodecamp.org/certification/Sami-Fziyen/javascript-algorithms-and-data-structures",
-  },
-  {
-    name: "AWS Cloud Developing",
-    issuer: "Amazon Web Services",
-    issueDate: "February 2025",
-    logo: "https://images.credly.com/size/680x680/images/119182cf-ca68-495a-a415-bff62dfdcc7e/image.png",
-    credentialUrl:
-      "https://www.credly.com/badges/2d42d87d-6b51-487d-ac1f-84a8aa8e95fd/public_url",
   },
 ];
