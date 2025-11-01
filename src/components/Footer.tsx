@@ -110,7 +110,7 @@ export const Footer: React.FC = () => {
               </li> */}
               <li className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                 <MapPin className="w-5 h-5" />
-                Kokkola, Finland
+                Helsinki, Finland
               </li>
             </ul>
           </div>
