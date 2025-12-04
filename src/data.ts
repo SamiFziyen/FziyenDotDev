@@ -74,7 +74,7 @@ export const certifications: Certification[] = [
     name: "AWS Cloud Developing",
     issuer: "Amazon Web Services",
     issueDate: "February 2025",
-    logo: "https://images.credly.com/size/680x680/images/119182cf-ca68-495a-a415-bff62dfdcc7e/image.png",
+    logo: "https://images.credly.com/size/680x680/images/bb3211c0-a562-44ec-a8b5-df54deb0e5e9/blob",
     credentialUrl:
       "https://www.credly.com/badges/2d42d87d-6b51-487d-ac1f-84a8aa8e95fd/public_url",
   },
@@ -82,7 +82,7 @@ export const certifications: Certification[] = [
     name: "AWS Cloud Foundations",
     issuer: "Amazon Web Services",
     issueDate: "October 2024",
-    logo: "https://images.credly.com/size/680x680/images/73e4a58b-a8ef-41a3-a7db-9183dd269882/image.png",
+    logo: "https://images.credly.com/size/680x680/images/e3541a0c-dd4a-4820-8052-5001006efc85/blob",
     credentialUrl:
       "https://www.credly.com/badges/3aaf55a9-a31b-471c-95b9-5412c803892a",
   },
