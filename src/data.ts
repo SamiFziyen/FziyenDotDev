@@ -54,8 +54,8 @@ export const timeline: TimelineItem[] = [
   {
     title: "Bachelor's  in Information Technology",
     organization: "Centria University of Applied Sciences",
-    period: "Aug 2024 -> Jun 2025",
-    description: "Double Degree mostly focusing on cloud architecture and AI",
+    period: "Jan 2023 -> Jun 2025",
+    description: "Erasmus+ & Double Degree mostly focusing on cloud architecture and AI",
     type: "education",
     logo: "https://storage-prtl-co.imgix.net/endor/organisations/866/logos/1725442892_fileuploads_374525_3875892_183-8e58c08d6aaa0a1860f5c9e220d90f5d_centria_c_512x512.png",
   },
