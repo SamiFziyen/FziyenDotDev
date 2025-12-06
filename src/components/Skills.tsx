@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Code2,
   Database,
@@ -11,7 +11,10 @@ import {
   PenTool,
   Monitor,
   Zap,
+  Grid3x3,
+  Target,
 } from "lucide-react";
+import { SkillRadar } from "./SkillRadar";
 
 const skillCategories = [
   {
@@ -57,35 +60,86 @@ const skillCategories = [
 ];
 
 export const Skills: React.FC = () => {
+  const [view, setView] = useState<'grid' | 'radar'>('grid');
+
   return (
     <section id="skills" className="py-20 px-4">
-      <h2 className="text-3xl font-bold text-center mb-12">Skills</h2>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-        {skillCategories.map((category, categoryIndex) => (
-          <motion.div
-            key={category.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              {category.icon}
-              <h3 className="text-xl font-semibold">{category.title}</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {category.skills.map((skill, skillIndex) => (
-                <div
-                  key={skill.name}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-12">
+          <h2 className="text-3xl font-bold">Skills & Expertise</h2>
+          <div className="flex gap-2 bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
+            <button
+              onClick={() => setView('grid')}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+                view === 'grid'
+                  ? 'bg-white dark:bg-gray-800 shadow-md'
+                  : 'hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              <Grid3x3 className="w-4 h-4" />
+              <span className="hidden sm:inline">Grid</span>
+            </button>
+            <button
+              onClick={() => setView('radar')}
+              className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${
+                view === 'radar'
+                  ? 'bg-white dark:bg-gray-800 shadow-md'
+                  : 'hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              <Target className="w-4 h-4" />
+              <span className="hidden sm:inline">Radar</span>
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {view === 'grid' ? (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            >
+              {skillCategories.map((category, categoryIndex) => (
+                <motion.div
+                  key={category.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+                  className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  {skill.icon}
-                  <span>{skill.name}</span>
-                </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    {category.icon}
+                    <h3 className="text-xl font-semibold">{category.title}</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {category.skills.map((skill) => (
+                      <div
+                        key={skill.name}
+                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        {skill.icon}
+                        <span>{skill.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
               ))}
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="radar"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="flex justify-center items-center bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg"
+            >
+              <SkillRadar />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

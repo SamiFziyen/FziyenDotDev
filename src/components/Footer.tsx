@@ -79,10 +79,26 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
+                  href="#blog"
+                  className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                >
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a
                   href="#projects"
                   className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
                 >
                   Projects
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#guestbook"
+                  className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                >
+                  Guestbook
                 </a>
               </li>
               <li>
@@ -117,9 +133,14 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-center text-gray-600 dark:text-gray-300">
-            © {new Date().getFullYear()} Sami Fziyen. All rights reserved.
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-center text-gray-600 dark:text-gray-300">
+              © {new Date().getFullYear()} Sami Fziyen. All rights reserved.
+            </p>
+            <p className="text-center text-xs text-gray-400 dark:text-gray-500">
+              Hint: Try pressing <kbd className="px-1 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs">Ctrl+K</kbd> or look for hidden features
+            </p>
+          </div>
         </div>
       </div>
     </footer>
