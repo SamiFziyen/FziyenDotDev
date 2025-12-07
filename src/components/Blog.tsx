@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, Eye, X, Tag } from 'lucide-react';
+import { Calendar, Clock, Eye, X } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface BlogPost {
   id: string;
@@ -8,146 +9,113 @@ interface BlogPost {
   slug: string;
   excerpt: string;
   content: string;
-  coverImage: string;
+  cover_image: string;
   tags: string[];
   views: number;
-  createdAt: string;
-  readTime: number;
+  created_at: string;
+  read_time?: number;
 }
 
-const blogPosts: BlogPost[] = [
-  {
-    id: '1',
-    title: 'Building Modern Web Applications with React and TypeScript',
-    slug: 'building-modern-web-apps-react-typescript',
-    excerpt: 'Explore best practices for building scalable web applications using React and TypeScript. Learn about type safety, component architecture, and more.',
-    content: `TypeScript has become an essential tool in modern web development, especially when combined with React. In this article, I'll share my experience and best practices for building scalable applications.
-
-## Why TypeScript?
-
-TypeScript provides type safety, better IDE support, and catches errors early in the development process. When working on large projects, these benefits become invaluable.
-
-## Key Concepts
-
-1. **Type Safety**: Catch errors before runtime
-2. **Better Refactoring**: Confidently restructure code
-3. **Enhanced IDE Support**: Autocomplete and intelligent suggestions
-
-## Component Architecture
-
-Building maintainable React applications requires thoughtful component design. Here are my key principles:
-
-- Keep components small and focused
-- Use TypeScript interfaces for props
-- Leverage hooks for state management
-- Implement proper error boundaries
-
-## Performance Optimization
-
-Performance is crucial for user experience:
-
-- Use React.memo for expensive components
-- Implement code splitting with React.lazy
-- Optimize bundle size with tree shaking
-- Monitor performance with React DevTools
-
-The combination of React and TypeScript creates a powerful foundation for building robust, maintainable applications!`,
-    coverImage: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop',
-    tags: ['React', 'TypeScript', 'Web Development'],
-    views: 127,
-    createdAt: '2024-11-15',
-    readTime: 5,
-  },
-  {
-    id: '2',
-    title: 'My Journey into Cloud Computing with AWS',
-    slug: 'my-journey-cloud-computing-aws',
-    excerpt: 'Discover my journey learning AWS cloud services, from EC2 to Lambda, and how cloud computing transformed my development workflow.',
-    content: `Cloud computing has revolutionized how we build and deploy applications. Here's my experience learning AWS and earning my certifications.
-
-## Why AWS?
-
-AWS is the leading cloud provider with a comprehensive suite of services. From EC2 to Lambda, the possibilities are endless.
-
-## What I Learned
-
-### Infrastructure as Code
-Using CloudFormation and Terraform to manage infrastructure programmatically has been a game-changer. No more manual configuration!
-
-### Serverless Architecture
-Building with Lambda and API Gateway allows for rapid development without managing servers.
-
-### Database Management
-From RDS to DynamoDB, AWS offers various database solutions for different needs.
-
-### Security Best Practices
-IAM policies, VPC configuration, and encryption are crucial for secure applications.
-
-## Key Takeaways
-
-The cloud enables rapid scaling and deployment. Understanding these services has been crucial for my development career. The ability to deploy globally in minutes is remarkable!`,
-    coverImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop',
-    tags: ['AWS', 'Cloud Computing', 'DevOps'],
-    views: 89,
-    createdAt: '2024-10-28',
-    readTime: 4,
-  },
-  {
-    id: '3',
-    title: 'The Power of Full-Stack Development',
-    slug: 'power-of-fullstack-development',
-    excerpt: 'Why full-stack development is a powerful skillset in modern software engineering. Explore the technologies and mindset needed.',
-    content: `Being a full-stack developer means understanding both frontend and backend technologies. Here's why this skillset is so valuable.
-
-## Frontend Mastery
-
-React, Vue, and modern JavaScript frameworks enable creating amazing user experiences. Responsive design and performance optimization are crucial skills.
-
-### Key Frontend Skills
-- Component-based architecture
-- State management (Redux, Context)
-- Responsive design principles
-- Performance optimization
-
-## Backend Expertise
-
-Node.js, databases, and API design form the backbone of any application. Understanding server architecture and scalability is essential.
-
-### Backend Fundamentals
-- RESTful API design
-- Database design and optimization
-- Authentication and authorization
-- Caching strategies
-
-## The Bridge Between
-
-Full-stack developers can see the bigger picture. We understand how data flows from database to user interface and back. This holistic view enables better architectural decisions.
-
-## My Tech Stack
-
-- **Frontend**: React, TypeScript, TailwindCSS
-- **Backend**: Node.js, Express, Python
-- **Database**: PostgreSQL, MongoDB, Supabase
-- **DevOps**: Docker, Kubernetes, AWS
-
-The future is full-stack! The ability to build complete applications from scratch is incredibly empowering.`,
-    coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop',
-    tags: ['Full-Stack', 'Web Development', 'Career'],
-    views: 203,
-    createdAt: '2024-10-10',
-    readTime: 6,
-  },
-];
-
 export const Blog: React.FC = () => {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const allTags = Array.from(new Set(blogPosts.flatMap(post => post.tags)));
+  useEffect(() => {
+    fetchBlogPosts();
+
+    if (supabase) {
+      const subscription = supabase
+        .channel('blog-changes')
+        .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'blog_posts' },
+          () => { fetchBlogPosts(); }
+        )
+        .subscribe();
+
+      return () => { subscription.unsubscribe(); };
+    }
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedPosts: BlogPost[] = (data || []).map((post: any) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        cover_image: post.cover_image,
+        tags: post.tags || [],
+        views: post.views,
+        created_at: post.created_at,
+        read_time: Math.ceil(post.content.split(' ').length / 200),
+      }));
+
+      setPosts(formattedPosts);
+    } catch (err) {
+      console.error('Error fetching blog posts:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const incrementView = async (postId: string) => {
+    if (!supabase) return;
+
+    try {
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        await supabase
+          .from('blog_posts')
+          .update({ views: post.views + 1 })
+          .eq('id', postId);
+
+        setPosts(posts.map(p =>
+          p.id === postId ? { ...p, views: p.views + 1 } : p
+        ));
+      }
+    } catch (err) {
+      console.error('Error incrementing view count:', err);
+    }
+  };
+
+  const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
 
   const filteredPosts = selectedTag
-    ? blogPosts.filter(post => post.tags.includes(selectedTag))
-    : blogPosts;
+    ? posts.filter(post => post.tags.includes(selectedTag))
+    : posts;
+
+  if (loading) {
+    return (
+      <section className="py-20 px-4 bg-gradient-to-b from-transparent to-purple-50/30 dark:to-purple-900/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Blog & Articles</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-gray-200 dark:bg-gray-700 rounded-xl h-80 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="blog" className="py-20 px-4 bg-gradient-to-b from-transparent to-purple-50/30 dark:to-purple-900/10">
@@ -163,31 +131,33 @@ export const Blog: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          <button
-            onClick={() => setSelectedTag(null)}
-            className={`px-4 py-2 rounded-full transition-all ${
-              !selectedTag
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
-            }`}
-          >
-            All Posts
-          </button>
-          {allTags.map(tag => (
+        {posts.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
             <button
-              key={tag}
-              onClick={() => setSelectedTag(tag)}
+              onClick={() => setSelectedTag(null)}
               className={`px-4 py-2 rounded-full transition-all ${
-                selectedTag === tag
+                !selectedTag
                   ? 'bg-purple-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
-              {tag}
+              All Posts
             </button>
-          ))}
-        </div>
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag)}
+                className={`px-4 py-2 rounded-full transition-all ${
+                  selectedTag === tag
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPosts.map((post, index) => (
@@ -196,12 +166,15 @@ export const Blog: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              onClick={() => setSelectedPost(post)}
+              onClick={() => {
+                setSelectedPost(post);
+                incrementView(post.id);
+              }}
               className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer group"
             >
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={post.coverImage}
+                  src={post.cover_image}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -211,18 +184,20 @@ export const Blog: React.FC = () => {
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    {new Date(post.createdAt).toLocaleDateString('en-US', {
+                    {new Date(post.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                     })}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {post.readTime} min
-                  </span>
+                  {post.read_time && (
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      {post.read_time} min
+                    </span>
+                  )}
                 </div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
@@ -248,6 +223,18 @@ export const Blog: React.FC = () => {
             </motion.article>
           ))}
         </div>
+
+        {filteredPosts.length === 0 && posts.length > 0 && (
+          <div className="text-center py-12 text-gray-500">
+            <p className="text-lg">No posts found with this tag.</p>
+          </div>
+        )}
+
+        {posts.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            <p className="text-lg">No blog posts available yet.</p>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
@@ -268,7 +255,7 @@ export const Blog: React.FC = () => {
             >
               <div className="relative h-64 md:h-80">
                 <img
-                  src={selectedPost.coverImage}
+                  src={selectedPost.cover_image}
                   alt={selectedPost.title}
                   className="w-full h-full object-cover"
                 />
@@ -283,12 +270,14 @@ export const Blog: React.FC = () => {
                   <div className="flex items-center gap-4 text-sm mb-3">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {new Date(selectedPost.createdAt).toLocaleDateString()}
+                      {new Date(selectedPost.created_at).toLocaleDateString()}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {selectedPost.readTime} min read
-                    </span>
+                    {selectedPost.read_time && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {selectedPost.read_time} min read
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
                       <Eye className="w-4 h-4" />
                       {selectedPost.views} views

@@ -1,33 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, Users, TrendingUp } from 'lucide-react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { supabase } from '../lib/supabase';
+
+interface AnalyticsData {
+  totalViews: number;
+  todayViews: number;
+  loading: boolean;
+}
 
 export const VisitorCounter: React.FC = () => {
-  const [totalViews, setTotalViews] = useLocalStorage('total-views', 1247);
-  const [todayViews, setTodayViews] = useLocalStorage('today-views', 0);
-  const [lastVisit, setLastVisit] = useLocalStorage('last-visit', '');
+  const [analytics, setAnalytics] = useState<AnalyticsData>({
+    totalViews: 0,
+    todayViews: 0,
+    loading: true,
+  });
   const [hasIncremented, setHasIncremented] = useState(false);
 
   useEffect(() => {
-    const today = new Date().toDateString();
+    const fetchAndUpdateAnalytics = async () => {
+      if (!supabase || hasIncremented) return;
 
-    if (!hasIncremented) {
-      if (lastVisit !== today) {
-        setTodayViews(1);
-      } else {
-        setTodayViews(prev => prev + 1);
+      try {
+        const today = new Date().toISOString().split('T')[0];
+
+        const { data, error } = await supabase
+          .from('page_analytics')
+          .select('*')
+          .eq('date', today)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) {
+          setAnalytics({
+            totalViews: data.total_views,
+            todayViews: data.today_views,
+            loading: false,
+          });
+
+          await supabase
+            .from('page_analytics')
+            .update({
+              total_views: data.total_views + 1,
+              today_views: data.today_views + 1,
+            })
+            .eq('date', today);
+        } else {
+          await supabase
+            .from('page_analytics')
+            .insert([{
+              date: today,
+              total_views: 1,
+              today_views: 1,
+            }]);
+
+          setAnalytics({
+            totalViews: 1,
+            todayViews: 1,
+            loading: false,
+          });
+        }
+
+        setHasIncremented(true);
+      } catch (err) {
+        console.error('Analytics error:', err);
+        setAnalytics(prev => ({ ...prev, loading: false }));
       }
-      setTotalViews(prev => prev + 1);
-      setLastVisit(today);
-      setHasIncremented(true);
-    }
+    };
+
+    fetchAndUpdateAnalytics();
   }, [hasIncremented]);
 
   const stats = [
-    { label: 'Total Views', value: totalViews, icon: Eye, color: 'text-blue-500' },
-    { label: 'Today', value: todayViews, icon: TrendingUp, color: 'text-green-500' },
-    { label: 'Visitors', value: Math.floor(totalViews * 0.6), icon: Users, color: 'text-purple-500' },
+    { label: 'Total Views', value: analytics.totalViews, icon: Eye, color: 'text-blue-500' },
+    { label: 'Today', value: analytics.todayViews, icon: TrendingUp, color: 'text-green-500' },
+    { label: 'Visitors', value: Math.floor(analytics.totalViews * 0.6), icon: Users, color: 'text-purple-500' },
   ];
 
   return (
@@ -49,7 +97,7 @@ export const VisitorCounter: React.FC = () => {
             <stat.icon className={`w-4 h-4 ${stat.color}`} />
             <div className="flex-1">
               <p className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
-              <p className="text-lg font-bold">{stat.value.toLocaleString()}</p>
+              <p className="text-lg font-bold">{analytics.loading ? '-' : stat.value.toLocaleString()}</p>
             </div>
           </motion.div>
         ))}
