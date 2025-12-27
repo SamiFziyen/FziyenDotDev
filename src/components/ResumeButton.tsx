@@ -11,7 +11,7 @@ export const ResumeButton: React.FC = () => {
     >
       <motion.a
         href="https://drive.google.com/file/d/1ETpDejYzQ7wS29E_cWG_9asMIZ3PyLDm/view?usp=sharing"
-        download="Public_CV.pdf"
+        download="CV_Public.pdf"
         whileHover={{ x: -8 }}
         className="flex items-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-l-lg shadow-lg hover:bg-purple-700 transition-colors"
       >
