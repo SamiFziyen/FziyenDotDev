@@ -106,8 +106,8 @@ export const Navbar: React.FC = () => {
               </a>
             ))}
             <a
-              href="https://drive.google.com/file/d/1QLJaIW4KZEoUoOGEgntzu2anRrdJ1myV/view?usp=drive_link"
-              download="Sami_Public_CV.pdf"
+              href="https://drive.google.com/file/d/1ETpDejYzQ7wS29E_cWG_9asMIZ3PyLDm/view?usp=sharing"
+              download="CV_Public.pdf"
               className="block py-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-500"
               onClick={() => setIsOpen(false)}
             >
